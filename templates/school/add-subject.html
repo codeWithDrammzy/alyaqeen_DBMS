@@ -1,0 +1,149 @@
+{% extends 'school/base.html' %}
+{% load crispy_forms_tags %}
+{% load static tailwind_tags %}
+{% load static %}
+
+{% block body %}
+<div class="page-wrapper">
+  <div class="content container-fluid">
+
+    <!-- Page Header -->
+    <div class="page-header mb-6 flex justify-between items-center">
+      <div>
+        <h3 class="text-2xl font-semibold">Academic Subjects</h3>
+        <ul class="breadcrumb text-gray-600 text-sm mt-1">
+          <li class="breadcrumb-item inline"><a href="{% url 'admin-dashboard' %}" class="text-blue-600">Dashboard</a></li>
+          <li class="breadcrumb-item inline font-medium text-gray-800">Subjects</li>
+        </ul>
+      </div>
+      <div>
+        <button id="add-subject-btn" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 flex items-center space-x-2">
+          <i class="fas fa-plus"></i>
+          <span>Add Subject</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Add Subject Form -->
+    <div id="hidden-form" class="hidden mb-6 bg-white p-10 rounded shadow-md border border-gray-400">
+      <h3 class="text-lg font-semibold mb-4">Add New Subject</h3>
+      <form method="POST" action="{% url 'add-subject' %}">
+        {% csrf_token %}
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {{ form|crispy }}
+        </div>
+        <div class="mt-4 flex justify-end">
+          <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Submit</button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Section Tabs -->
+    <div class="flex space-x-4 mb-6 flex-wrap">
+      {% for section in sections %}
+      <button class="section-tab px-4 py-2 rounded bg-gray-200 text-gray-800 hover:bg-blue-500 hover:text-white transition"
+              data-section="{{ section|lower }}">
+        {{ section }}
+      </button>
+      {% endfor %}
+    </div>
+
+    <!-- Section Tables -->
+    <div id="section-tables">
+      {% for section in sections %}
+      <div class="subject-section" data-section="{{ section|lower }}" style="display: none;">
+        <h3 class="text-xl font-semibold mb-2">Subjects – {{ section }}</h3>
+        <table class="min-w-full divide-y divide-gray-800 mb-8">
+          <thead class="bg-gray-100">
+            <tr>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Name</th>
+              <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">Action</th>
+            </tr>
+          </thead>
+          <tbody class="bg-white divide-y divide-gray-200">
+            {% with found=0 %}
+            {% for subject in subjects %}
+              {% if subject.section.name|lower == section|lower %}
+                {% with found=1 %}
+                <tr>
+                  <td class="px-6 py-4 text-sm text-gray-900">{{ subject.name|upper }}</td>
+                  <td class="px-6 py-4 text-right text-sm font-medium">
+                    <div class="inline-flex space-x-3">
+                      <a href="#" class="inline-flex items-center px-3 py-1.5 text-sm bg-green-500 rounded hover:bg-green-600 transition">
+                        <i class="fas fa-pen mr-2"></i> Edit
+                      </a>
+                      <form action="#" method="POST" onsubmit="return confirm('Are you sure you want to delete this subject?');">
+                        {% csrf_token %}
+                        <button type="submit" class="inline-flex items-center px-3 py-1.5 text-sm text-white bg-red-500 rounded hover:bg-red-600 transition">
+                          <i class="fas fa-trash mr-2"></i> Delete
+                        </button>
+                      </form>
+                    </div>
+                  </td>
+                </tr>
+                {% endwith %}
+              {% endif %}
+            {% endfor %}
+            
+            {% endwith %}
+          </tbody>
+        </table>
+      </div>
+      {% endfor %}
+    </div>
+
+    <!-- Footer -->
+    <footer class="mt-8 text-center text-sm text-gray-500">
+      <p>Copyright © 2020 Dreamguys.</p>
+    </footer>
+  </div>
+</div>
+
+<!-- Section Toggle Script -->
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const buttons = document.querySelectorAll('.section-tab');
+    const sections = document.querySelectorAll('.subject-section');
+    const formContainer = document.getElementById('hidden-form');
+
+    function showSection(name) {
+      sections.forEach(sec => {
+        sec.style.display = (sec.dataset.section === name) ? 'block' : 'none';
+      });
+
+      buttons.forEach(btn => {
+        if (btn.dataset.section === name) {
+          btn.classList.add('bg-blue-500', 'text-white');
+          btn.classList.remove('bg-gray-200', 'text-gray-800');
+        } else {
+          btn.classList.remove('bg-blue-500', 'text-white');
+          btn.classList.add('bg-gray-200', 'text-gray-800');
+        }
+      });
+    }
+
+    if (buttons.length) showSection(buttons[0].dataset.section);
+
+    buttons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        showSection(btn.dataset.section);
+      });
+    });
+
+    const btn = document.getElementById('add-subject-btn');
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation(); 
+      formContainer.style.display = 'block';
+    });
+
+    document.body.addEventListener('click', () => {
+      formContainer.style.display = 'none';
+    });
+
+    formContainer.addEventListener('click', (e) => {
+      e.stopPropagation();
+    });
+  });
+</script>
+
+{% endblock %}

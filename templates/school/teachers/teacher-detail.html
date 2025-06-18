@@ -1,0 +1,69 @@
+{% extends 'school/base.html' %}
+{% load static %}
+
+{% block body %}
+<div class="page-wrapper min-h-screen py-6">
+    <div class="content w-full px-4">
+
+
+        <!-- Breadcrumb & Header -->
+        <div class=" mb-6 border-b pb-4">
+            <h3 class="text-2xl font-bold text-gray-800">Teacher Profile</h3>
+            <ul class="breadcrumb text-base mt-1 text-gray-500 flex gap-2">
+                <li><a href="{% url 'admin-dashboard' %}" class="hover:underline text-blue-600">Dashboard</a></li>
+                <li>/</li>
+                <li><a href="{% url 'teacher-list' %}" class="hover:underline text-blue-600">Teachers</a></li>
+                <li>/</li>
+                <li class="text-gray-700">{{ teacher.first_name }} {{ teacher.last_name }}</li>
+            </ul>
+        </div>
+
+        <!-- Profile Card -->
+        <div class="bg-white shadow-lg rounded-xl overflow-hidden">
+            <div class="flex flex-col md:flex-row items-start gap-6 p-8">
+
+                <!-- Left: Profile Picture -->
+                <div class="flex-shrink-0 flex flex-col space-y-6 items-center">
+                    <img class="w-40 h-40 rounded-full border-4 border-blue-600 object-cover shadow"
+                        src="{% if teacher.avatar %}{{ teacher.avatar.url }}{% else %}https://via.placeholder.com/150{% endif %}"
+                        alt="Profile Picture">
+                        
+                    <p class="mt-2 text-base text-gray-600 italic">ID: {{ teacher.teacher_id }}</p>
+                </div>
+
+                <!-- Right: Details -->
+                <div class="flex-1 w-full">
+                    <h2 class="text-2xl font-semibold text-blue-800 border-b pb-2 mb-4">
+                        {{ teacher.first_name|title }} {{ teacher.last_name|title }}
+                    </h2>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-[16px] text-gray-800">
+                        <p><span class="font-semibold">Email:</span> {{ teacher.email }}</p>
+                        <p><span class="font-semibold">Gender:</span> {{ teacher.get_gender_display }}</p>
+                        <p><span class="font-semibold">Section:</span> {{ teacher.section }}</p>
+                        <p><span class="font-semibold">Subject:</span> {{ teacher.subject }}</p>
+                        <p><span class="font-semibold">Qualification:</span> {{ teacher.get_qualification_display }}</p>
+                        <p><span class="font-semibold">Salary:</span> ₦{{ teacher.salary|floatformat:2 }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="border-t  m-2 py-4 flex justify-end gap-6">
+                <a href=""
+                   class=" bg-secondary text-white text-sm font-medium px-4 py-2 rounded shadow">
+                    <i class="fas fa-eye"></i> Edit
+                </a>
+
+                <form method="POST" action="" onsubmit="return confirm('Are you sure you want to delete this teacher?');">
+                    {% csrf_token %}
+                    <button type="submit"
+                            class="bg-danger hover:bg-red-700  text-white text-sm font-medium px-4 py-2 rounded shadow">
+                        <i class="fas fa-trash"></i> Delete
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

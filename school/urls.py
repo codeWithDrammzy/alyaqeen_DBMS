@@ -1,0 +1,18 @@
+
+from django.urls import path
+from . import views
+
+urlpatterns = [
+    path('admin-dashboard/', views.admin_dashboard, name="admin-dashboard"),
+    path('academic-session/', views.academic_session, name="academic-session"),
+    path('add-subject', views.add_subject , name="add-subject"),
+
+    #teachers
+    path('add-teacher/', views.add_teacher, name="add-teacher"), 
+    path('teacher-list/', views.teacher_list, name="teacher-list"), 
+    path('teacher-detail/<int:pk>', views.teacher_detail, name="teacher-detail"), 
+
+    path('logout-user/', views.logoutUser, name="logout-user"),
+]
+
+

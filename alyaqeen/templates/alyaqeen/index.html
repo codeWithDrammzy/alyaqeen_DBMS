@@ -1,0 +1,154 @@
+{% load static tailwind_tags %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Alyaqeen Academy</title>
+    {% comment %} <script src="https://cdn.tailwindcss.com"></script> {% endcomment %}
+    {% tailwind_css %}
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" xintegrity="sha512-Fo3rlrZj/k7sW94l7XhYk3Vb3G/b/g8r+1z/z+9rLwz/v8R2K4sPz+pPj5+z+8XQ" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc; /* Lightest gray for overall background */
+        }
+        .login-box { display: none; } /* Kept for potential JS toggle, though not directly used in this static HTML */
+    </style>
+</head>
+<body class="text-gray-800 antialiased">
+
+    <!-- Navbar -->
+    <nav class="bg-white shadow-lg py-4 px-6 md:px-10 flex justify-between items-center sticky top-0 z-50">
+        <h1 class="text-2xl sm:text-3xl font-extrabold text-blue-700">Alyaqeen Academy</h1>
+        <ul class="hidden md:flex gap-8 items-center text-base font-medium">
+            <li><a href="#" class="text-gray-700 hover:text-blue-600 transition-colors duration-200">Home</a></li>
+            <li><a href="#" class="text-gray-700 hover:text-blue-600 transition-colors duration-200">About</a></li>
+            <li><a href="#" class="text-gray-700 hover:text-blue-600 transition-colors duration-200">Contact</a></li>
+            <li>
+                <a href="{% url 'my-login' %}" class="bg-blue-700 hover:bg-blue-800 text-white px-6 py-2.5 rounded-full shadow-md transition transform hover:scale-105 duration-300">
+                    Login
+                </a>
+            </li>
+        </ul>
+        <!-- Mobile Menu Button -->
+        <button id="mobile-menu-button" class="md:hidden text-gray-700 focus:outline-none">
+            <i class="fas fa-bars text-xl"></i>
+        </button>
+    </nav>
+
+    <!-- Mobile Menu Drawer -->
+    <div id="mobile-menu-drawer" class="fixed inset-y-0 right-0 w-64 bg-white z-50 transform translate-x-full transition-transform duration-300 ease-in-out md:hidden shadow-xl">
+        <div class="p-6 border-b border-gray-200 flex justify-end">
+            <button id="close-menu-button" class="text-gray-700 focus:outline-none">
+                <i class="fas fa-times text-xl"></i>
+            </button>
+        </div>
+        <nav class="flex flex-col p-6 space-y-4">
+            <a href="#" class="block text-gray-700 hover:text-blue-600 text-lg font-medium">Home</a>
+            <a href="#" class="block text-gray-700 hover:text-blue-600 text-lg font-medium">About</a>
+            <a href="#" class="block text-gray-700 hover:text-blue-600 text-lg font-medium">Contact</a>
+            <button onclick="alert('Login functionality to be implemented!')" class="w-full bg-blue-700 hover:bg-blue-800 text-white px-6 py-2.5 rounded-full shadow-md transition duration-300 text-lg">
+                Login
+            </button>
+        </nav>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="text-center py-24 sm:py-32 lg:py-40 bg-gradient-to-br from-blue-500 to-blue-700 px-6 overflow-hidden relative">
+        <div class="absolute inset-0 bg-pattern opacity-10 z-0"></div> <!-- Subtle background pattern for visual interest -->
+        <div class="relative z-10 max-w-4xl mx-auto">
+            <h2 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white leading-tight mb-6 animate-fade-in-down">
+                Welcome to Alyaqeen  Management System
+            </h2>
+            <p class="text-lg sm:text-xl text-blue-100 max-w-2xl mx-auto mb-10 animate-fade-in-up">
+                Manage students, staff, academic results, fees, and more — all in one secure, intuitive, and modern platform.
+            </p>
+            <button onclick="alert('Get Started functionality to be implemented!')" class="bg-white text-blue-700 hover:bg-blue-50 hover:text-blue-800 px-10 py-4 rounded-full text-lg font-bold shadow-xl transition transform hover:scale-105 duration-300 animate-fade-in-up delay-200">
+                Get Started
+            </button>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="py-20 sm:py-28 px-6 bg-white">
+        <div class="max-w-7xl mx-auto">
+            <h3 class="text-3xl sm:text-4xl font-bold text-center text-gray-900 mb-16">
+                Comprehensive Features
+            </h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+                <div class="p-8 shadow-xl rounded-xl bg-gradient-to-br from-blue-50 to-blue-100 border border-blue-200 transform hover:-translate-y-2 transition-all duration-300">
+                    <div class="text-blue-600 mb-4 text-4xl text-center">
+                        <i class="fas fa-user-graduate"></i>
+                    </div>
+                    <h4 class="text-2xl font-semibold text-gray-900 mb-3 text-center">Student Management</h4>
+                    <p class="text-gray-700 text-center">Effortlessly track student records, attendance, personal details, and academic progress in one centralized location.</p>
+                </div>
+                <div class="p-8 shadow-xl rounded-xl bg-gradient-to-br from-green-50 to-green-100 border border-green-200 transform hover:-translate-y-2 transition-all duration-300">
+                    <div class="text-green-600 mb-4 text-4xl text-center">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h4 class="text-2xl font-semibold text-gray-900 mb-3 text-center">Academic Results</h4>
+                    <p class="text-gray-700 text-center">Streamline the process of uploading term results, generating report cards, and analyzing student performance with ease and accuracy.</p>
+                </div>
+                <div class="p-8 shadow-xl rounded-xl bg-gradient-to-br from-purple-50 to-purple-100 border border-purple-200 transform hover:-translate-y-2 transition-all duration-300">
+                    <div class="text-purple-600 mb-4 text-4xl text-center">
+                        <i class="fas fa-money-check-alt"></i>
+                    </div>
+                    <h4 class="text-2xl font-semibold text-gray-900 mb-3 text-center">Fee Management</h4>
+                    <p class="text-gray-700 text-center">Simplify handling all school payments, issuing invoices, tracking due dates, and generating comprehensive financial reports.</p>
+                </div>
+                <div class="p-8 shadow-xl rounded-xl bg-gradient-to-br from-orange-50 to-orange-100 border border-orange-200 transform hover:-translate-y-2 transition-all duration-300">
+                    <div class="text-orange-600 mb-4 text-4xl text-center">
+                        <i class="fas fa-chalkboard-teacher"></i>
+                    </div>
+                    <h4 class="text-2xl font-semibold text-gray-900 mb-3 text-center">Staff Administration</h4>
+                    <p class="text-gray-700 text-center">Efficiently manage staff profiles, payroll details, attendance records, and administrative tasks for all school personnel.</p>
+                </div>
+                <div class="p-8 shadow-xl rounded-xl bg-gradient-to-br from-red-50 to-red-100 border border-red-200 transform hover:-translate-y-2 transition-all duration-300">
+                    <div class="text-red-600 mb-4 text-4xl text-center">
+                        <i class="fas fa-book-open"></i>
+                    </div>
+                    <h4 class="text-2xl font-semibold text-gray-900 mb-3 text-center">Curriculum & Subjects</h4>
+                    <p class="text-gray-700 text-center">Organize academic curricula, define subjects, and assign courses to teachers and classes effortlessly.</p>
+                </div>
+                <div class="p-8 shadow-xl rounded-xl bg-gradient-to-br from-teal-50 to-teal-100 border border-teal-200 transform hover:-translate-y-2 transition-all duration-300">
+                    <div class="text-teal-600 mb-4 text-4xl text-center">
+                        <i class="fas fa-calendar-alt"></i>
+                    </div>
+                    <h4 class="text-2xl font-semibold text-gray-900 mb-3 text-center">Event Calendar</h4>
+                    <p class="text-gray-700 text-center">Keep track of school events, holidays, examinations, and important dates with an integrated, easy-to-use calendar.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-gray-300 py-10 text-center text-sm">
+        <p>&copy; 2025 Alyaqeen Secondary School, Kaduna. All rights reserved.</p>
+        <p class="mt-2">Designed with passion and code.</p>
+    </footer>
+
+    <!-- Mobile Menu Toggle JS -->
+    <script>
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenuDrawer = document.getElementById('mobile-menu-drawer');
+        const closeMenuButton = document.getElementById('close-menu-button');
+
+        mobileMenuButton.addEventListener('click', () => {
+            mobileMenuDrawer.classList.remove('translate-x-full');
+        });
+
+        closeMenuButton.addEventListener('click', () => {
+            mobileMenuDrawer.classList.add('translate-x-full');
+        });
+
+        // Close drawer if clicked outside
+        document.addEventListener('click', (event) => {
+            if (!mobileMenuDrawer.contains(event.target) && !mobileMenuButton.contains(event.target)) {
+                mobileMenuDrawer.classList.add('translate-x-full');
+            }
+        });
+    </script>
+</body>
+</html>
