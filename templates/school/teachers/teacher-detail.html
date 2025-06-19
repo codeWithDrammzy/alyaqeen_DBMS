@@ -14,7 +14,7 @@
                 <li>/</li>
                 <li><a href="{% url 'teacher-list' %}" class="hover:underline text-blue-600">Teachers</a></li>
                 <li>/</li>
-                <li class="text-gray-700">{{ teacher.first_name }} {{ teacher.last_name }}</li>
+                <li class="text-gray-700">{{ teacher.first_name }} {{ teacher.last_name }}  </li>
             </ul>
         </div>
 
@@ -24,17 +24,24 @@
 
                 <!-- Left: Profile Picture -->
                 <div class="flex-shrink-0 flex flex-col space-y-6 items-center">
-                    <img class="w-40 h-40 rounded-full border-4 border-blue-600 object-cover shadow"
-                        src="{% if teacher.avatar %}{{ teacher.avatar.url }}{% else %}https://via.placeholder.com/150{% endif %}"
-                        alt="Profile Picture">
-                        
+                    {% if teacher.avatar %}
+                        <img class="w-40 h-40 rounded-full border-4 border-blue-600 object-cover shadow"
+                            src="{{ teacher.avatar.url }}"
+                            alt="Profile Picture">
+                    {% else %}
+                        <div class="w-40 h-40 rounded-full border-4 border-blue-600 bg-gray-100 flex items-center justify-center text-gray-500 text-lg font-semibold shadow">
+                            Upload Now!
+                        </div>
+                    {% endif %}
                     <p class="mt-2 text-base text-gray-600 italic">ID: {{ teacher.teacher_id }}</p>
+                    <p>Joined on: {{ teacher.date }}</p>
                 </div>
+
 
                 <!-- Right: Details -->
                 <div class="flex-1 w-full">
                     <h2 class="text-2xl font-semibold text-blue-800 border-b pb-2 mb-4">
-                        {{ teacher.first_name|title }} {{ teacher.last_name|title }}
+                        {{ teacher.first_name|title }} {{ teacher.last_name|title }} 
                     </h2>
 
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-[16px] text-gray-800">
@@ -50,12 +57,12 @@
 
             <!-- Action Buttons -->
             <div class="border-t  m-2 py-4 flex justify-end gap-6">
-                <a href=""
+                <a href="{% url 'edit-teacher' teacher.id %}"
                    class=" bg-secondary text-white text-sm font-medium px-4 py-2 rounded shadow">
                     <i class="fas fa-eye"></i> Edit
                 </a>
 
-                <form method="POST" action="" onsubmit="return confirm('Are you sure you want to delete this teacher?');">
+                <form action="{% url 'delete-teacher' teacher.id %}" onsubmit="return confirm('Are you sure you want to delete this teacher?');">
                     {% csrf_token %}
                     <button type="submit"
                             class="bg-danger hover:bg-red-700  text-white text-sm font-medium px-4 py-2 rounded shadow">
@@ -66,4 +73,9 @@
         </div>
     </div>
 </div>
+<script src="{% static 'assets/js/jquery-3.6.0.min.js' %}"></script>
+<script src="{% static 'assets/js/popper.min.js' %}"></script>
+<script src="{% static 'assets/plugins/bootstrap/js/bootstrap.min.js' %}"></script>
+<script src="{% static 'assets/plugins/slimscroll/jquery.slimscroll.min.js' %}"></script>
+<script src="{% static 'assets/js/script.js' %}"></script>
 {% endblock %}

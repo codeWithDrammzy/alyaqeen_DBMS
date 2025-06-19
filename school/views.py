@@ -9,7 +9,7 @@ from .forms import *
 def admin_dashboard(request):
     user = request.user  
     context = {'user': user}
-    return render(request, 'school/admin-dashboard.html', context)
+    return render(request, 'school/admin/admin-dashboard.html', context)
 
 @login_required(login_url='my-login')
 def academic_session(request):
@@ -25,7 +25,7 @@ def academic_session(request):
             messages.error(request, 'This Session Already Exists')
 
     context = {'sessions': session, 'form': form}
-    return render(request, 'school/academic-session.html', context)
+    return render(request, 'school/admin/academic-session.html', context)
 
 
 @login_required(login_url='my-login')
@@ -45,7 +45,13 @@ def add_subject(request):
         'sections': sections,
         'form': form
     }
-    return render(request, 'school/add-subject.html', context)
+    return render(request, 'school/admin/add-subject.html', context)
+
+@login_required(login_url='my-login')
+def remove_subject(request, pk):
+    subject = Subject.objects.get(id = pk)
+    subject.delete()
+    return redirect('add-subject')
 
 @login_required(login_url='my-login')
 def add_teacher(request):
@@ -68,14 +74,31 @@ def teacher_list(request):
     context = {'teachers':teachers}
     return render(request, 'school/teachers/teacher-list.html', context)
 
+
 @login_required(login_url='my-login')
 def teacher_detail(request, pk):
     teacher = Teacher.objects.get(id=pk)
     context ={'teacher':teacher}
     return render(request, 'school/teachers/teacher-detail.html', context)
 
+@login_required(login_url='my-login')
+def edit_teacher(request, pk):
+    teacher = Teacher.objects.get(id=pk)
+    form = TeacherForm(instance=teacher)
+    if request.method == "POST":
+        form  = TeacherForm(request.POST, request.FILES, instance=teacher)
+        if form.is_valid():
+            form.save()
+            return redirect('teacher-list')
+
+    return render(request, 'school/teachers/edit-teacher.html', {'form': form})
 
 
+@login_required(login_url='my-login')
+def delete_teacher(request, pk):
+    teacher = Teacher.objects.get(id=pk)
+    teacher.delete()
+    return redirect('teacher-list')
 
 
 @login_required(login_url='my-login')

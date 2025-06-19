@@ -70,6 +70,8 @@ class Teacher(models.Model):
     qualification = models.CharField(max_length=10, choices=QUALIFICATION_CHOICES)
     subject = models.ForeignKey('Subject', on_delete=models.CASCADE)
     avatar = models.ImageField(upload_to='avatars/', blank=True, null=True)
+    date = models.DateField(auto_now_add=True)
+
     
 
     

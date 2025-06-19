@@ -35,7 +35,7 @@ INSTALLED_APPS = [
     'widget_tweaks',
     'theme',
     'django_browser_reload',
-    
+    'studentApp',
 ]
 TAILWIND_APP_NAME = 'theme'
 CRISPY_ALLOWED_TEMPLATE_PACKS = "tailwind"
