@@ -1,5 +1,7 @@
 from django.db import models
 from school.models import*
+from school.models import SchoolClass
+
 
 
 class Guardian(models.Model):
@@ -29,7 +31,7 @@ class Student(models.Model):
     date_of_birth = models.DateField()
     religion = models.CharField(max_length=20)
     date_join = models.DateField()
-    phone_number = models.CharField(max_length=11, null=True, blank=True)
+    phone = models.CharField(max_length=11, null=True, blank=True)
     avatar = models.ImageField(upload_to='students/', blank=True, null=True)
     
 

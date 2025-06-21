@@ -1,0 +1,63 @@
+{% extends 'school/base.html' %}
+{% load crispy_forms_tags %}
+{% load static tailwind_tags %}
+{% load widget_tweaks %}
+{% load static %}
+
+{% block body %}
+<div class="page-wrapper bg-gray-100 min-h-screen py-6">
+    <div class="content w-full px-4">
+
+        <!-- Breadcrumb & Header -->
+     <div class="mb-6 border-b pb-4">
+            <h3 class="text-2xl font-bold text-gray-800">Update Student Record</h3>
+            <ul class="breadcrumb text-base mt-1 text-gray-500 flex gap-2">
+                <li><a href="{% url 'admin-dashboard' %}" class="hover:underline text-blue-600">Dashboard</a></li>
+                <li>/</li>
+                <li class="text-gray-700"><a href="{% url 'student-list' %}" class="hover:underline text-blue-600">Students List </a></li>
+            </ul>
+        
+
+        <!-- Form Card -->
+        <div class="bg-gray-50 w-80% rounded-2xl shadow-lg p-6">
+            <h5 class="text-xl font-semibold text-blue-700 mb-4 border-b pb-2">Update Student</h5>
+
+            <form method="POST" enctype="multipart/form-data" class="space-y-6">
+                {% csrf_token %}
+
+                <!-- Guardian Info -->
+                <div class="hidden">
+                    <h4 class="text-xl  font-semibold text-gray-700 mb-4 border-b pb-2">👨‍👩‍👧 Guardian Information</h4>
+                    <div class="grid grid-cols-1 w-75 md:grid-cols-2 gap-6">
+                        {{ guardian_form|crispy }}
+                    </div>
+                </div>
+
+                <!-- Student Info -->
+                <div>
+                    <h4 class="text-xl font-semibold text-gray-700 mt-8 mb-4 border-b pb-2">🎓 Student Information</h4>
+                    <div class="grid grid-cols-1 w-75 md:grid-cols-2 gap-6">
+                        {{ student_form|crispy }}
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <div class="pt-6">
+                    <button type="submit"
+                            class="py-2 px-6 rounded-lg text-lg font-semibold text-white bg-blue-600 hover:bg-blue-700 shadow">
+                        Submit
+                    </button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+
+<!-- Scripts -->
+<script src="{% static 'assets/js/jquery-3.6.0.min.js' %}"></script>
+<script src="{% static 'assets/js/popper.min.js' %}"></script>
+<script src="{% static 'assets/plugins/bootstrap/js/bootstrap.min.js' %}"></script>
+<script src="{% static 'assets/plugins/slimscroll/jquery.slimscroll.min.js' %}"></script>
+<script src="{% static 'assets/js/script.js' %}"></script>
+{% endblock %}
