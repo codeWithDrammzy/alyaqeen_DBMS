@@ -1,0 +1,199 @@
+{% extends 'school/base.html' %}
+{% load crispy_forms_tags %}
+{% load static tailwind_tags %}
+{% load static %}
+{% block body %}
+
+<div class="page-wrapper">
+  <div class="content container-fluid">
+
+    <!-- Header -->
+    <div class="page-header">
+      <div class="flex justify-between items-center">
+        <div>
+          <h3 class="text-2xl font-semibold">Support Staff</h3>
+          <ul class="breadcrumb text-gray-600 text-sm mt-1">
+            <li class="breadcrumb-item inline">
+              <a href="{% url 'admin-dashboard' %}" class="text-blue-600">Dashboard</a>
+            </li>
+            <li class="breadcrumb-item inline font-medium text-gray-800">Support Staff</li>
+          </ul>
+        </div>
+        <div>
+          <button id="toggle-form-btn" type="button"
+            class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 flex items-center space-x-2">
+            <i class="fas fa-plus"></i>
+            <span>New Staff</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Hidden Form -->
+    <div id="hidden-form" class="mt-6 bg-white p-6 rounded shadow border border-gray-200 hidden">
+      <h3 class="text-lg font-semibold mb-4">Add Support Staff</h3>
+      <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form|crispy }}
+        <div class="mt-4 text-right">
+          <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">
+            Submit
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Messages -->
+    {% if messages %}
+      <div class="space-y-2 mt-4">
+        {% for message in messages %}
+          <div class="p-4 rounded text-white
+            {% if message.tags == 'success' %} bg-green-500
+            {% elif message.tags == 'error' %} bg-red-500
+            {% else %} bg-blue-500 {% endif %}">
+            {{ message }}
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    <!-- Staff Table -->
+    <div class="mt-6">
+      <div class="bg-white shadow rounded-lg overflow-hidden">
+        <div class="p-4 overflow-x-auto">
+          <table class="w-full divide-y divide-gray-200 table-auto">
+            <thead class="bg-gray-100">
+              <tr>
+                <th class="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase">Name</th>
+                <th class="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase">Role</th>
+                <th class="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase">Phone</th>
+                <th class="px-6 py-3 text-right text-xs font-bold text-gray-500 uppercase">Action</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-300">
+              {% for staff in staffs %}
+              <tr class="hover:bg-gray-50 transition-colors duration-200">
+                <td class="px-6 py-2 text-sm text-gray-900">
+                  <div class="flex items-center space-x-3">
+                    {% if staff.avatar %}
+                      <img src="{{ staff.avatar.url }}" alt="Avatar" class="h-10 w-10 rounded-full object-cover">
+                    {% else %}
+                      <div class="h-10 w-10 rounded-full bg-gray-300 flex items-center justify-center text-white text-sm">
+                        {{ staff.first_name|first|upper }}{{ staff.last_name|first|upper }}
+                      </div>
+                    {% endif %}
+                    <span class="font-semibold">
+                      {{ staff.first_name|upper }} {{ staff.last_name|upper }}
+                    </span>
+                  </div>
+                </td>
+                <td class="px-6 py-2 text-sm text-gray-900">{{ staff.role|upper }}</td>
+                <td class="px-6 py-2 text-sm text-gray-900">{{ staff.phone }}</td>
+                <td class="px-6 py-2 text-right text-sm font-medium">
+                  
+                                <button class="bg-blue-500 p-3  rounded-pill hover:text-blue-700" title="IDCard">
+                                <a href="{% url 'support-id' staff.id %}" class="text-white"><i class="fas fa-eye"></i> Staff ID </i>
+                                </a>
+                                </button>
+                            </td>
+                
+              </tr>
+              {% empty %}
+              <tr>
+                <td colspan="4" class="px-6 py-4 text-center text-gray-500">No support staff found</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="mt-8 text-center text-sm text-gray-500">
+      <p>Copyright © 2025 Alyaqeen School.</p>
+    </footer>
+  </div>
+</div>
+
+
+<div class="header">
+   <div class="header-left flex items-center gap-4">
+      <a href="index.html" class="logo">
+         <img src="{% static 'assets/images/logo1.jpg' %}" alt="Logo">
+      </a>
+      
+   </div>
+
+
+   <a href="javascript:void(0);" id="toggle_btn">
+   <i class="fas fa-align-left"></i>
+   </a>
+   <div class="top-nav-search">
+      <form method="get" class="flex items-center">
+         <input  type="text" placeholder="Search here" class="bg-black rounded-2xl border border-black px-6 py-2"/>
+         <button type="submit"  name="q" class="bg-blue-500 hover:bg-blue-700 text-white  rounded-2xl px-4 py-2" >
+            <i class="fas fa-search"></i>
+         </button>
+      </form>
+   </div>
+
+   <a class="mobile_btn" id="mobile_btn">
+   <i class="fas fa-bars"></i>
+   </a>
+   <ul class="nav user-menu">
+      
+      <li class="nav-item dropdown has-arrow">
+         <a href="#" class="dropdown-toggle nav-link" data-toggle="dropdown">
+            <span class="user-img">
+               {{user.email}}
+            </span>
+         </a>
+
+         <div class="dropdown-menu">
+            <div class="user-header">
+               
+               <div class="user-text">
+                  <h6>{{user.first_name}}</h6>
+                  <p class="text-muted mb-0">Administrator</p>
+               </div>
+            </div>
+            <a class="dropdown-item" href="profile.html">My Profile</a>
+            <a class="dropdown-item" href="inbox.html">Inbox</a>
+            <a class="dropdown-item" href="{% url 'logout-user' %}">Logout</a>
+         </div>
+      </li>
+   </ul>
+</div>
+
+
+<!-- JS Scripts -->
+<script src="{% static 'assets/js/jquery-3.6.0.min.js' %}"></script>
+<script src="{% static 'assets/js/popper.min.js' %}"></script>
+<script src="{% static 'assets/plugins/bootstrap/js/bootstrap.min.js' %}"></script>
+<script src="{% static 'assets/plugins/slimscroll/jquery.slimscroll.min.js' %}"></script>
+<script src="{% static 'assets/plugins/datatables/datatables.min.js' %}"></script>
+<script src="{% static 'assets/js/script.js' %}"></script>
+
+<!-- Toggle form script -->
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const btn = document.getElementById('toggle-form-btn');
+    const form = document.getElementById('hidden-form');
+
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      form.classList.toggle('hidden');
+    });
+
+    document.body.addEventListener('click', (e) => {
+      if (!form.contains(e.target) && !btn.contains(e.target)) {
+        form.classList.add('hidden');
+      }
+    });
+
+    form.addEventListener('click', e => e.stopPropagation());
+  });
+</script>
+
+{% endblock %}

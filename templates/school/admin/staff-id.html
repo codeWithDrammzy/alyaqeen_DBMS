@@ -1,0 +1,209 @@
+{% extends 'school/base.html' %}
+{% load static %}
+{% block body %}
+
+<style>
+    @media print {
+    body * {
+        visibility: hidden;
+    }
+
+    #print-area, #print-area * {
+        visibility: visible;
+    }
+
+    #print-area {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+    }
+
+    .no-print {
+        display: none !important;
+    }
+    }
+    @media print {
+  * {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+}
+
+</style>
+
+<div class="page-wrapper">
+    <div class="content w-full px-4">
+
+        <!-- Page Header -->
+        <div class="mb-6 border-b pb-4">
+            <h3 class="text-2xl font-bold text-gray-800">STAFF ID CARD</h3>
+            <div class="breadcrumb">
+                <ul class="text-gray-500 flex gap-2">
+                    <li><a href="{% url 'admin-dashboard' %}" class="hover:underline">Dashboard</a></li>
+                    <li>/</li>
+                    
+                    <li><a href="{% url 'staff-list' %}" class="hover:underline">Staff List</a></li>
+                    <li>/</li>
+                    <li class="text-gray-700 font-semibold">Staff ID Card</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- ID Cards -->
+        <div id="print-area"  class="flex flex-col md:flex-row justify-center items-start gap-10 bg-gray-50">
+
+            <!-- Front Side -->
+            <div class="relative w-[420px] h-[260px] bg-white border border-gray-200 rounded-xl shadow-2xl overflow-hidden transform hover:scale-105 transition-transform duration-300">
+                <!-- Header -->
+                <div class="bg-blue-800 text-white text-center text-xs py-2 px-3 font-medium tracking-wide">
+                    No. 7 Al-Yaqeen Road, Behind Water Board Building, Malali Layout, Kaduna.
+                </div>
+
+                <!-- Watermark -->
+                <div class="absolute inset-0 z-0 flex items-center justify-center">
+                    <img src="{% static 'assets/images/logo1.jpg' %}" alt="School Logo" class="w-72 h-72 object-contain opacity-10">
+                </div>
+
+                <!-- School Name -->
+                <h2 class="text-xl font-extrabold text-center mt-2 text-blue-900 z-10 relative">
+                    AL-YAQEEN ACADEMY
+                </h2>
+
+                <!-- Card Content -->
+                <div class="relative z-10 flex px-4 pt-3 gap-4 items-start text-sm text-gray-800">
+                    <!-- Left -->
+                    <div class="flex-shrink-0 w-32 space-y-1">
+                        {% if staff.avatar %}
+                            <img src="{{ staff.avatar.url }}" alt="Avatar"
+                                class="h-24 w-24 rounded-full object-cover border-4 border-white shadow-lg ring-2 ring-blue-500 mx-auto">
+                        {% else %}
+                            <div class="h-24 w-24 rounded-full bg-blue-600 text-white flex items-center justify-center text-3xl font-bold shadow-lg mx-auto">
+                                {{ staff.first_name|first|upper }}{{ staff.last_name|first|upper }}
+                            </div>
+                        {% endif %}
+                        <p class="text-xs"><span class="font-semibold">ID:</span> {{ staff.staff_id }}</p>
+                        <p class="text-xs"><span class="font-semibold">Issued:</span> ALYAQEEN</p>
+                    </div>
+
+                    <!-- Right -->
+                    <div class="flex flex-col justify-start flex-grow space-y-1 truncate">
+                        <h3 class="text-base font-semibold text-blue-900 leading-tight truncate">
+                            {{ staff.first_name|title }} {{ staff.last_name|title }}
+                        </h3>
+                        <p class="text-xs"><span class="font-semibold">Role:</span> {{ staff.role|title }}</p>
+                        <p class="text-xs"><span class="font-semibold">Email:</span> {{ staff.email }}</p>
+                        <p class="text-xs"><span class="font-semibold">Phone:</span> {{ staff.phone }}</p>
+                        <p class="text-xs"><span class="font-semibold">Joined:</span> {{ staff.date_joined }}</p>
+                    </div>
+                    
+                </div>
+                
+                
+                
+            </div>
+
+            
+            <!-- Back Side -->
+            <div class="relative w-[420px] h-[260px] bg-white border border-gray-200 rounded-xl shadow-2xl overflow-hidden">
+                <div class="flex flex-col justify-between h-full p-4 text-[11px] text-gray-800">
+
+                    <!-- Logo Centered -->
+                    <div class="flex justify-center">
+                        <img src="{% static 'assets/images/logo1.jpg' %}" alt="School Logo" class="h-10 object-contain">
+                    </div>
+
+                    <!-- Middle Section -->
+                    <div class="space-y-2 px-2">
+                        <p><span class="font-semibold">Staff ID:</span> {{ staff.staff_id }}</p>
+
+                        <div>
+                            <p class="font-semibold">Signature:</p>
+                            <div class="border-b border-gray-500 h-5 w-40 mt-1"></div>
+                        </div>
+                    </div>
+
+                    <!-- Disclaimer -->
+                    <div class="text-[10px] text-gray-600 leading-tight px-2 py-6">
+                        <p>
+                            This ID card is the property of <strong>AL-YAQEEN ACADEMY</strong> and must be returned upon request. If found, please return to the school.
+                        </p>
+                    </div>
+
+                    <!-- Footer -->
+                    <div class="text-[10px] text-center text-blue-900 font-semibold">
+                        Al-Yaqeen Academy • Malali, Kaduna • 0903 000 0000
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+
+        <!-- Print Button -->
+        <div class="flex justify-center mt-6 gap-4">
+            <button onclick="window.print()" class="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700">
+                <i class="fas fa-print"></i> Print ID Card
+            </button>
+        </div>
+    </div>
+</div>
+
+
+<div class="header">
+   <div class="header-left flex items-center gap-4">
+      <a href="index.html" class="logo">
+         <img src="{% static 'assets/images/logo1.jpg' %}" alt="Logo">
+      </a>
+      
+   </div>
+
+
+   <a href="javascript:void(0);" id="toggle_btn">
+   <i class="fas fa-align-left"></i>
+   </a>
+   <div class="top-nav-search">
+      <form method="get" class="flex items-center">
+         <input  type="text" placeholder="Search here" class="bg-black rounded-2xl border border-black px-6 py-2"/>
+         <button type="submit"  name="q" class="bg-blue-500 hover:bg-blue-700 text-white  rounded-2xl px-4 py-2" >
+            <i class="fas fa-search"></i>
+         </button>
+      </form>
+   </div>
+
+   <a class="mobile_btn" id="mobile_btn">
+   <i class="fas fa-bars"></i>
+   </a>
+   <ul class="nav user-menu">
+      
+      <li class="nav-item dropdown has-arrow">
+         <a href="#" class="dropdown-toggle nav-link" data-toggle="dropdown">
+            <span class="user-img">
+               {{user.email}}
+            </span>
+         </a>
+
+         <div class="dropdown-menu">
+            <div class="user-header">
+               
+               <div class="user-text">
+                  <h6>{{user.first_name}}</h6>
+                  <p class="text-muted mb-0">Administrator</p>
+               </div>
+            </div>
+            <a class="dropdown-item" href="profile.html">My Profile</a>
+            <a class="dropdown-item" href="inbox.html">Inbox</a>
+            <a class="dropdown-item" href="{% url 'logout-user' %}">Logout</a>
+         </div>
+      </li>
+   </ul>
+</div>
+
+
+<!-- Scripts -->
+<script src="{% static 'assets/js/jquery-3.6.0.min.js' %}"></script>
+<script src="{% static 'assets/js/popper.min.js' %}"></script>
+<script src="{% static 'assets/plugins/bootstrap/js/bootstrap.min.js' %}"></script>
+<script src="{% static 'assets/plugins/slimscroll/jquery.slimscroll.min.js' %}"></script>
+<script src="{% static 'assets/js/script.js' %}"></script>
+{% endblock %}

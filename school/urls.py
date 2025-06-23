@@ -6,6 +6,11 @@ urlpatterns = [
     path('admin-dashboard/', views.admin_dashboard, name="admin-dashboard"),
     path('academic-session/', views.academic_session, name="academic-session"),
     path('add-subject', views.add_subject , name="add-subject"),
+    path('staf-listf', views.staff_list , name="staff-list"),
+    path('staff-id/<int:staff_id>/', views.staff_id, name='staff-id'),
+    path('support-id/<int:staff_id>/', views.support_id, name='support-id'),
+    path('support-staff', views.support_staff, name='support-staff'),
+
     path('remove-subject/<int:pk>', views.remove_subject , name="remove-subject"),
 
     #teachers

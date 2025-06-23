@@ -1,4 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
+from django.urls import reverse
+
 from .forms import*
 from django.contrib.auth.decorators import login_required
 from .models import*
@@ -25,24 +27,6 @@ def add_student(request):
         'student_form': student_form
     })
 
-
-@login_required(login_url='my-login')
-def student_list(request):
-    class_filter = request.GET.get('class')
-
-    if class_filter == 'senior':
-        students = Student.objects.filter(student_class__name__icontains='SS')
-    elif class_filter == 'junior':
-        students = Student.objects.filter(student_class__name__icontains='JSS')
-    elif class_filter == 'primary':
-        students = Student.objects.filter(student_class__name__icontains='Primary')
-    elif class_filter == 'nursery':
-        students = Student.objects.filter(student_class__name__icontains='Nursery')
-    else:
-        students = Student.objects.all()
-
-    context = {'students': students}
-    return render(request, 'school/students/student-list.html', context)
 
 
 @login_required(login_url='my-login')
@@ -81,7 +65,7 @@ def seniorclass(request):
     if class_filter:
         students = Student.objects.filter(student_class__name__iexact=class_filter)
     else:
-        students = Student.objects.filter(student_class__name__icontains='SS')
+        students = Student.objects.filter(student_class__name__startswith='SS')  # <-- FIXED
 
     senior_classes = SchoolClass.objects.filter(name__startswith='SS')
 
@@ -93,10 +77,88 @@ def seniorclass(request):
     return render(request, 'school/students/senior-class.html', context)
 
 
+@login_required(login_url='my-login')
+def juniorclass(request):
+    class_filter = request.GET.get('class')
+
+    # ✅ Get all junior classes from SchoolClass model
+    junior_classes = SchoolClass.objects.filter(name__startswith='JSS').order_by('name')
+
+    # ✅ Filter students by selected class or show all JSS students
+    if class_filter:
+        students = Student.objects.filter(student_class__name__iexact=class_filter)
+    else:
+        students = Student.objects.filter(student_class__name__icontains='JSS')
+
+    context = {
+        'students': students,
+        'selected_class': class_filter,
+        'junior_classes': junior_classes,
+    }
+    return render(request, 'school/students/Junior-class.html', context)
+
+
+@login_required(login_url='my-login')
+def primaryclass(request):
+    class_filter = request.GET.get('class')
+
+    # ✅ Get all junior classes from SchoolClass model
+    primary_classes = SchoolClass.objects.filter(name__startswith='Pr').order_by('name')
+
+    # ✅ Filter students by selected class or show all JSS students
+    if class_filter:
+        students = Student.objects.filter(student_class__name__iexact=class_filter)
+    else:
+        students = Student.objects.filter(student_class__name__icontains='Primary')
+
+    context = {
+        'students': students,
+        'selected_class': class_filter,
+        'primary_classes': primary_classes,
+    }
+    return render(request, 'school/students/primary-class.html', context)
+
+
+@login_required(login_url='my-login')
+def nurseryclass(request):
+    class_filter = request.GET.get('class')
+
+    # ✅ Get all junior classes from SchoolClass model
+    nursery_classes = SchoolClass.objects.filter(name__startswith='Nu').order_by('name')
+
+    # ✅ Filter students by selected class or show all JSS students
+    if class_filter:
+        students = Student.objects.filter(student_class__name__iexact=class_filter)
+    else:
+        students = Student.objects.filter(student_class__name__icontains='Nursery')
+
+    context = {
+        'students': students,
+        'selected_class': class_filter,
+        'nursery_classes': nursery_classes,
+    }
+    return render(request, 'school/students/nursery-class.html', context)
+
+
+
 
 
 @login_required(login_url='my-login')
 def delete_student(request, pk):
-    student = Student.objects.get(id=pk)
+    student = get_object_or_404(Student, id=pk)
+    student_class_name = student.student_class.name  # e.g. "JSS 1", "SS 2", etc.
+
+    # Store the class before deleting
+    class_redirect = None
+    if 'JSS' in student_class_name:
+        class_redirect = reverse('junior-class') + f"?class={student_class_name}"
+    elif 'SS' in student_class_name:
+        class_redirect = reverse('senior-class') + f"?class={student_class_name}"
+    elif 'Primary' in student_class_name or 'PR' in student_class_name.upper():
+        class_redirect = reverse('primary-class') + f"?class={student_class_name}"
+
     student.delete()
-    return redirect('student-list')
+
+    if class_redirect:
+        return redirect('admin-dashboard')
+    return redirect('admin-dashboard')  

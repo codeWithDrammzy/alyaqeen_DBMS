@@ -1,15 +1,24 @@
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, redirect, HttpResponse
+from django.shortcuts import render, redirect, HttpResponse,get_object_or_404
 from django.contrib.auth.models import auth
 from django.contrib import messages
 from .models import *
+from studentApp.models  import*
 from .forms import *
 
 @login_required(login_url='my-login')  
 def admin_dashboard(request):
+    total_student = Student.objects.count()
+    total_teacher = Teacher.objects.count()
     user = request.user  
-    context = {'user': user}
+    context = {'user': user,
+               'total_student':total_student,
+               'total_teacher':total_teacher
+               
+               }
     return render(request, 'school/admin/admin-dashboard.html', context)
+
+
 
 @login_required(login_url='my-login')
 def academic_session(request):
@@ -99,6 +108,50 @@ def delete_teacher(request, pk):
     teacher = Teacher.objects.get(id=pk)
     teacher.delete()
     return redirect('teacher-list')
+
+
+@login_required(login_url='my-login')
+def staff_list(request):
+    staff = AdministrativeStaff.objects.all().order_by('role')
+    context = {'staff':staff}
+    return render(request, 'school/admin/staff-list.html', context)
+
+@login_required(login_url='my-login')
+def staff_id(request, staff_id):
+    staff = get_object_or_404(AdministrativeStaff, id=staff_id)
+    context = {
+        'staff': staff
+    }
+    return render(request, 'school/admin/staff-id.html', context)
+
+
+@login_required(login_url='my-login')
+def support_staff(request):
+    form = SupportForm()
+    if request.method == "POST":
+        form = SupportForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Support staff added successfully.")
+            return redirect('support-staff')
+        else:
+            messages.error(request, "There was an error submitting the form.")
+    
+    staffs = SupportStaff.objects.all()
+    context = {
+        'form': form,
+        'staffs': staffs
+    }
+    return render(request, 'school/admin/support-staff.html', context)
+
+
+
+@login_required(login_url='my-login')
+def support_id(request, staff_id):
+    staff = get_object_or_404(SupportStaff, id=staff_id)
+    return render(request, 'school/admin/support-id.html', {'staff': staff})
+
+
 
 
 @login_required(login_url='my-login')

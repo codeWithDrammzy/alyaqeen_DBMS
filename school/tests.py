@@ -1,71 +1,81 @@
-{% extends 'school/base.html' %}
-{% load crispy_forms_tags %}
-{% load static tailwind_tags %}
-{% load widget_tweaks %}
-{% load static %}
-
-{% block body %}
-<div class="page-wrapper bg-gray-100">
-    <div class="content container-fluid">
-        <div class="page-header">
-            <div class="row align-items-center">
-                <div class="col">
-                    <h3 class="page-title">Teacher Information</h3>
-                    <ul class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="{% url 'admin-dashboard' %}">Dashboard</a></li>
-                        <li class="breadcrumb-item active">Teacher Info</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-        
-        <!-- ID Card Layout -->
-        <div class=" bg-gray-100 ">
-            <div class="w-[600px] h-[250px]  bg-white shadow-xl rounded-xl border-4 border-blue-600 overflow-hidden">
-    
-                <!-- Full-width Header -->
-                <div class="bg-blue-100 px-4 py-2 flex items-center gap-3 rounded border-b border-blue-300">
-                    <img src="{% static 'assets/images/logo1.jpg' %}" alt="Logo" class="h-10 w-10">
-                    <div>
-                        <h2 class="font-weight-600 text-blue-800 text-sm">Alyaqeen Academy ID card</h2>
-                     
-                    </div>
-                </div>
-
-                <!-- Body: Image + Info -->
-                <div class="flex h-full">
-                    <!-- Left: Profile Picture -->
-                    <div class="w-1/3 bg-gray-100 flex items-center justify-center border-r border-gray-300 p-3">
-                        <img src="{% if teacher.profile_picture %}{{ teacher.profile_picture.url }}{% else %}https://via.placeholder.com/150{% endif %}" 
-                            alt="Profile" class="w-28 h-36 object-cover border border-gray-400 shadow-md">
-                    </div>
-
-                    <!-- Right: Info -->
-                    <div class="w-2/3 p-4 flex flex-col justify-between">
-                        <div class="text-sm text-gray-800 space-y-1">
-                            <p><strong>Name:</strong> {{ teacher.first_name|title }} {{ teacher.last_name|title }}</p>
-                            <p><strong>Gender:</strong> {{ teacher.gender }}</p>
-                            <p><strong>Section:</strong> {{ teacher.section }}</p>
-                            <p><strong>Staff ID:</strong> {{ teacher.teacher_id }}</p>
-                        </div>
-
-                        <div class="text-[10px] text-gray-600 mt-2 border-t pt-1">
-                            <p>Authorized by: School Management</p>
-                            <p>Valid for: {{ academic_session.name }}</p>
-                        </div>
-                    </div>
-                </div>
-
+ <div class="header">
+            <div class="header-left flex items-center gap-4">
+               <a href="index.html" class="logo">
+                  <img src="{% static 'assets/images/logo1.jpg' %}" alt="Logo">
+               </a>
+               
             </div>
 
-        </div>
-        
-    </div>
-</div>
 
-<script src="{% static 'assets/js/jquery-3.6.0.min.js' %}"></script>
-<script src="{% static 'assets/js/popper.min.js' %}"></script>
-<script src="{% static 'assets/plugins/bootstrap/js/bootstrap.min.js' %}"></script>
-<script src="{% static 'assets/plugins/slimscroll/jquery.slimscroll.min.js' %}"></script>
-<script src="{% static 'assets/js/script.js' %}"></script>
-{% endblock %}
+            <a href="javascript:void(0);" id="toggle_btn">
+            <i class="fas fa-align-left"></i>
+            </a>
+            <div class="top-nav-search">
+               <form>
+                  <input type="text" class="form-control" placeholder="Search here">
+                  <button class="btn" type="submit"><i class="fas fa-search"></i></button>
+               </form>
+            </div>
+            <a class="mobile_btn" id="mobile_btn">
+            <i class="fas fa-bars"></i>
+            </a>
+            <ul class="nav user-menu">
+               <li class="nav-item dropdown noti-dropdown">
+                  <a href="#" class="dropdown-toggle nav-link" data-toggle="dropdown">
+                   {% if unread_notification_count > 0 %}
+                  <i class="far fa-bell"></i> <span class="badge badge-pill">{{unread_notification_count}}</span>
+                  {% endif %}
+                  </a>
+                  <div class="dropdown-menu notifications">
+                     <div class="topnav-dropdown-header">
+                        <span class="notification-title">Notifications</span>
+                        <a href="javascript:void(0)" class="clear-noti"> Clear All </a>
+                     </div>
+                     <div class="noti-content">
+                        <ul class="notification-list">
+                           {% for notification in unread_notification %}
+                           <li class="notification-message">
+                              <a href="#">
+                                 <div class="media">
+                                    <span class="avatar avatar-sm">
+                                    <img class="avatar-img rounded-circle" alt="User Image" src="assets/img/profiles/avatar-02.jpg">
+                                    </span>
+                                    <div class="media-body">
+                                       <p class="noti-details"><span class="noti-title">{{ notification.user.username }}</span> {{ notification.message }} <span class="noti-title">your estimate</span></p>
+                                       <p class="noti-time"><span class="notification-time">{{ notification.created_at|timesince }} ago</span></p>
+                                    </div>
+                                 </div>
+                              </a>
+                           </li>
+                           {% endfor %}
+
+                        </ul>
+                     </div>
+                     <div class="topnav-dropdown-footer">
+                        <a href="#">View all Notifications</a>
+                     </div>
+                  </div>
+                  
+               </li>
+               <li class="nav-item dropdown has-arrow">
+                  <a href="#" class="dropdown-toggle nav-link" data-toggle="dropdown">
+                     <span class="user-img">
+                       {{user.email}}
+                     </span>
+                  </a>
+
+                  <div class="dropdown-menu">
+                     <div class="user-header">
+                        
+                        <div class="user-text">
+                           <h6>{{user.first_name}}</h6>
+                           <p class="text-muted mb-0">Administrator</p>
+                        </div>
+                     </div>
+                     <a class="dropdown-item" href="profile.html">My Profile</a>
+                     <a class="dropdown-item" href="inbox.html">Inbox</a>
+                     <a class="dropdown-item" href="{% url 'logout-user' %}">Logout</a>
+                  </div>
+               </li>
+            </ul>
+         </div>

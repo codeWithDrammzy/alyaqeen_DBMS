@@ -1,6 +1,7 @@
 from django.db import models
 from django.core.exceptions import ValidationError
 import uuid
+from django.contrib.auth.models import User
 
 #Academic Sesstion eg 2024/2025
 class AcademicSession(models.Model):
@@ -73,10 +74,6 @@ class Teacher(models.Model):
     date = models.DateField(auto_now_add=True)
 
     
-
-    
-
-
     def save(self, *args, **kwargs):
         if not self.teacher_id:
             self.teacher_id = f"AYQ-TCH-{str(uuid.uuid4().int)[-4:]}"
@@ -103,3 +100,50 @@ class SchoolClass(models.Model):
     def __str__(self):
         return f"{self.name} ({self.section.name})"
 
+# administrative staff
+class AdministrativeStaff(models.Model):
+    ROLE_CHOICES = (
+        ('admin', 'Admin'),
+        ('principal', 'Principal'),
+        ('cashier', 'Cashier'),
+        ('exam_officer', 'Exam Officer'),
+    )
+
+    staff_id = models.CharField(max_length=12, unique=True, editable=False)
+    first_name = models.CharField(max_length=20)
+    last_name = models.CharField(max_length=20)
+    email = models.EmailField(max_length=30)
+    phone = models.CharField(max_length=11, blank=True)
+    role = models.CharField(max_length=20, choices=ROLE_CHOICES)
+    avatar = models.ImageField(upload_to='staff_avatars/', blank=True, null=True)
+    date_joined = models.DateField(auto_now_add=True)
+
+    
+
+    def save(self, *args, **kwargs):
+        if not self.staff_id:
+            prefix_map = {
+                'admin': 'AYQ-ADM',
+                'principal': 'AYQ-PRC',
+                'cashier': 'AYQ-CAH',
+                'exam_officer': 'AYQ-EXM',
+            }
+            prefix = prefix_map.get(self.role, 'AYQ-STF')
+            self.staff_id = f"{prefix}-{str(uuid.uuid4().int)[-4:]}"
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return f"{self.first_name} {self.last_name} ({self.role})"
+    
+
+
+class SupportStaff(models.Model):
+    first_name = models.CharField( max_length=50)
+    last_name = models.CharField( max_length=50)
+    phone = models.CharField( max_length=11)
+    address = models.CharField(max_length=50)
+    role = models.CharField(max_length=20)
+    avatar = models.ImageField(upload_to='staff_avatars/', blank=True, null=True)
+
+    def __str__(self):
+        return f"{self.first_name} {self.last_name} "

@@ -6,6 +6,8 @@ admin.site.register(Section),
 admin.site.register(Teacher),
 admin.site.register(Subject),
 admin.site.register(SchoolClass),
+admin.site.register(AdministrativeStaff),
+admin.site.register(SupportStaff),
 
 
 

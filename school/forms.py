@@ -21,3 +21,9 @@ class AcademicSessionForm(forms.ModelForm):
     class Meta:
         model = AcademicSession
         fields = ['name']
+
+class SupportForm(forms.ModelForm):
+    
+    class Meta:
+        model = SupportStaff
+        fields = '__all__'
