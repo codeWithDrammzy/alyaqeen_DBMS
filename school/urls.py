@@ -20,6 +20,9 @@ urlpatterns = [
     path('edit-teacher/<int:pk>', views.edit_teacher, name="edit-teacher"),
     path('delete-teacher/<int:pk>', views.delete_teacher, name="delete-teacher"),
     path('logout-user/', views.logoutUser, name="logout-user"),
+
+
+    path('search/', views.global_search, name='global-search'),
 ]
 
 

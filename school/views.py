@@ -1,6 +1,7 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, HttpResponse,get_object_or_404
 from django.contrib.auth.models import auth
+from django.db.models import Q
 from django.contrib import messages
 from .models import *
 from studentApp.models  import*
@@ -158,3 +159,50 @@ def support_id(request, staff_id):
 def logoutUser(request):
     auth.logout(request)
     return redirect('my-login')
+
+
+
+@login_required(login_url='my-login')
+def global_search(request):
+    query = request.GET.get('q')
+    students = teachers = support_staff = admin_staff = []
+
+    if query:
+        students = Student.objects.filter(
+            Q(first_name__icontains=query) |
+            Q(last_name__icontains=query) |
+            Q(phone__icontains=query) 
+           
+        )
+
+        teachers = Teacher.objects.filter(
+            Q(first_name__icontains=query) |
+            Q(last_name__icontains=query) |
+            Q(email__icontains=query) |
+            Q(teacher_id__icontains=query) |
+            Q(email__icontains=query)
+        )
+
+        support_staff = SupportStaff.objects.filter(
+            Q(first_name__icontains=query)|
+            Q(last_name__icontains=query)|
+            Q(role__icontains=query)
+           
+        )
+
+        admin_staff = AdministrativeStaff.objects.filter(
+            Q(first_name__icontains=query) |
+            Q(last_name__icontains=query) |
+            Q(staff_id__icontains=query) |
+            Q(role__icontains=query) |
+            Q(email__icontains=query)
+        )
+
+    context = {
+        'query': query,
+        'students': students,
+        'teachers': teachers,
+        'support_staff': support_staff,
+        'admin_staff': admin_staff
+    }
+    return render(request, 'school/search-results.html', context)

@@ -54,57 +54,6 @@
     </div>
 </div>
 
-
-<div class="header">
-   <div class="header-left flex items-center gap-4">
-      <a href="index.html" class="logo">
-         <img src="{% static 'assets/images/logo1.jpg' %}" alt="Logo">
-      </a>
-      
-   </div>
-
-
-   <a href="javascript:void(0);" id="toggle_btn">
-   <i class="fas fa-align-left"></i>
-   </a>
-   <div class="top-nav-search">
-      <form method="get" class="flex items-center">
-         <input  type="text" placeholder="Search here" class="bg-black rounded-2xl border border-black px-6 py-2"/>
-         <button type="submit"  name="q" class="bg-blue-500 hover:bg-blue-700 text-white  rounded-2xl px-4 py-2" >
-            <i class="fas fa-search"></i>
-         </button>
-      </form>
-   </div>
-
-   <a class="mobile_btn" id="mobile_btn">
-   <i class="fas fa-bars"></i>
-   </a>
-   <ul class="nav user-menu">
-      
-      <li class="nav-item dropdown has-arrow">
-         <a href="#" class="dropdown-toggle nav-link" data-toggle="dropdown">
-            <span class="user-img">
-               {{user.email}}
-            </span>
-         </a>
-
-         <div class="dropdown-menu">
-            <div class="user-header">
-               
-               <div class="user-text">
-                  <h6>{{user.first_name}}</h6>
-                  <p class="text-muted mb-0">Administrator</p>
-               </div>
-            </div>
-            <a class="dropdown-item" href="profile.html">My Profile</a>
-            <a class="dropdown-item" href="inbox.html">Inbox</a>
-            <a class="dropdown-item" href="{% url 'logout-user' %}">Logout</a>
-         </div>
-      </li>
-   </ul>
-</div>
-
-
 <!-- Scripts -->
 <script src="{% static 'assets/js/jquery-3.6.0.min.js' %}"></script>
 <script src="{% static 'assets/js/popper.min.js' %}"></script>
